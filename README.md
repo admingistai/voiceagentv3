@@ -220,6 +220,35 @@ config.tts_model = "aura-2"
 run_agent(article_urls, config=config)
 ```
 
+## Integration with Other Projects 🔗
+
+Once deployed to Railway, you can integrate your voice agent into other applications:
+
+### 📖 **[Complete Integration Guide](docs/integration-guide.md)**
+
+Quick integration options:
+
+1. **🎙️ LiveKit Room Integration** - Connect web/mobile apps to the same LiveKit room
+2. **🌐 HTTP API Integration** - Use REST endpoints for knowledge processing
+3. **📦 Python Package Integration** - Import components directly
+
+```python
+# Example: Connect your web app to the voice agent
+const room = new LiveKit.Room();
+await room.connect('wss://your-instance.livekit.cloud', token);
+// Voice agent automatically responds to speech!
+```
+
+```python
+# Example: Use HTTP API from any language
+response = requests.post(
+    'https://your-railway-app.railway.app/query-knowledge',
+    json={'question': 'What are the main points from the articles?'}
+)
+```
+
+See the [Integration Guide](docs/integration-guide.md) for complete examples with web apps, mobile apps, chatbots, and more!
+
 ## Development 🛠️
 
 ### Running Tests
