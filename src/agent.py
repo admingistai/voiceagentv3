@@ -382,6 +382,33 @@ def create_worker_options(config: Optional[Config] = None) -> WorkerOptions:
     return worker_options
 
 
+def run_agent(article_urls: List[str], config: Config):
+    """
+    Run the voice agent with the provided configuration and article URLs.
+    
+    This is the main function called by __main__.py to start the agent.
+    It sets up the LiveKit worker and starts the agent service.
+    
+    Args:
+        article_urls: List of article URLs to process for the knowledge base
+        config: Configuration object with API keys and settings
+    """
+    # Set up logging
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    )
+    
+    logger.info("Starting voice agent...")
+    
+    # Initialize agent with articles
+    worker_options = initialize_agent(article_urls, config)
+    
+    # Run with LiveKit CLI
+    # This starts the agent and keeps it running
+    cli.run_app(worker_options)
+
+
 # Main entry point for LiveKit CLI
 if __name__ == "__main__":
     # Load configuration from environment
