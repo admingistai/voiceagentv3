@@ -1,0 +1,50 @@
+# Core Dependencies
+# LiveKit Agents framework with required plugins
+livekit-agents[openai,silero,deepgram,cartesia,turn-detector]~=1.0
+
+# Web Scraping
+# For extracting article content from URLs
+trafilatura>=1.6.0
+
+# API Clients
+# OpenAI for LLM and embeddings
+openai>=1.0.0
+
+# Deepgram for speech-to-text
+deepgram-sdk>=3.0.0
+
+# Cartesia for text-to-speech
+cartesia>=1.0.0
+
+# Audio Processing
+# Required for local audio testing (optional for production)
+pyaudio>=0.2.11
+
+# Environment Management
+# For loading .env files in development
+python-dotenv>=1.0.0
+
+# Async Support
+# Additional async utilities
+aiohttp>=3.9.0
+asyncio>=3.4.3
+
+# Logging and Monitoring
+# Enhanced logging capabilities
+colorlog>=6.7.0
+
+# Type Hints
+# For better code quality
+typing-extensions>=4.8.0
+
+# JSON Processing
+# For better JSON handling
+orjson>=3.9.0
+
+# Development Dependencies (optional)
+# Uncomment if needed for development
+# pytest>=7.4.0
+# pytest-asyncio>=0.21.0
+# black>=23.0.0
+# flake8>=6.0.0
+# mypy>=1.5.0

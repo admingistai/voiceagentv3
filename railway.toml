@@ -1,0 +1,62 @@
+# Railway configuration file
+# This file defines how Railway should build and deploy the voice agent
+
+[build]
+# Use Docker for building since we have a Dockerfile
+builder = "DOCKERFILE"
+
+# The Dockerfile is in the root directory
+dockerfilePath = "Dockerfile"
+
+[deploy]
+# Start command for the voice agent
+# This runs the agent module with article URLs from environment
+startCommand = "python -m src.agent"
+
+# Health check endpoint (optional)
+# Since this is a voice agent, it might not have an HTTP endpoint
+# healthcheckPath = "/health"
+
+# Number of instances to run
+# Start with 1 and scale as needed
+numReplicas = 1
+
+# Restart policy
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 3
+
+[env]
+# Environment variables that Railway should provide
+# These will be set in the Railway dashboard
+
+# Required API Keys (set these in Railway dashboard)
+# LIVEKIT_URL = "wss://your-instance.livekit.cloud"
+# LIVEKIT_API_KEY = "your-api-key"
+# LIVEKIT_API_SECRET = "your-api-secret"
+# OPENAI_API_KEY = "your-openai-key"
+# DEEPGRAM_API_KEY = "your-deepgram-key"
+# CARTESIA_API_KEY = "your-cartesia-key"
+
+# Optional configuration
+# LLM_MODEL = "gpt-4o-mini"
+# STT_MODEL = "nova-3"
+# TTS_MODEL = "sonic-2"
+# TTS_VOICE_ID = "a0e99841-438c-4a64-b679-ae501e7d6091"
+# LANGUAGE = "en"
+# LOG_LEVEL = "INFO"
+
+# Article URLs to process (comma-separated)
+# ARTICLE_URLS = "https://example.com/article1,https://example.com/article2"
+
+[[services]]
+# Service configuration
+name = "voice-agent"
+type = "worker"
+
+# Resource allocation
+# Adjust based on your needs and Railway plan
+[services.resources]
+# Memory in MB
+memory = 512
+# CPU cores (can be fractional)
+cpu = 0.5
