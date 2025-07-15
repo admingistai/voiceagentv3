@@ -272,9 +272,9 @@ def initialize_agent(
     voice_agent.prepare_knowledge_base()
     
     # Return worker options
+    # Note: Updated to current LiveKit Agents API (v1.0+)
     return WorkerOptions(
-        entrypoint_fnc=entrypoint,
-        job_request_fnc=lambda req: req.accept()  # Accept all jobs
+        entrypoint_fnc=entrypoint
     )
 
 
@@ -303,10 +303,11 @@ def run_agent(article_urls: List[str], config: Optional[Config] = None):
 
 # Example usage
 if __name__ == "__main__":
-    # Example article URLs
+    # Example article URLs for testing
+    # Note: These should be replaced with actual article URLs when running
     example_urls = [
-        "https://example.com/article1",
-        "https://example.com/article2"
+        "https://github.blog/2019-03-29-leader-spotlight-erin-spiceland/",
+        "https://docs.livekit.io/agents/"
     ]
     
     # Run the agent

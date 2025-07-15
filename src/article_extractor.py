@@ -82,7 +82,8 @@ class ArticleExtractor:
             # Download the article content
             # include_comments=False to avoid extracting comment sections
             # include_tables=False to focus on main text content
-            downloaded = trafilatura.fetch_url(url, timeout=self.timeout)
+            # Note: trafilatura.fetch_url() doesn't accept timeout parameter
+            downloaded = trafilatura.fetch_url(url)
             
             if not downloaded:
                 logger.error(f"Failed to download content from: {url}")
