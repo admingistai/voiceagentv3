@@ -29,6 +29,7 @@ class Config:
     including API keys, model selections, and service settings.
     """
     
+    # Required fields (no defaults) - must come first
     # LiveKit Configuration
     livekit_url: str
     livekit_api_key: str
@@ -36,14 +37,21 @@ class Config:
     
     # OpenAI Configuration
     openai_api_key: str
-    llm_model: str = "gpt-4o-mini"  # Default to cost-effective model
     
     # Deepgram Configuration
     deepgram_api_key: str
-    stt_model: str = "nova-3"  # Latest and most accurate model
     
     # Cartesia Configuration
     cartesia_api_key: str
+    
+    # Optional fields (with defaults) - must come after required fields
+    # OpenAI Settings
+    llm_model: str = "gpt-4o-mini"  # Default to cost-effective model
+    
+    # Deepgram Settings
+    stt_model: str = "nova-3"  # Latest and most accurate model
+    
+    # Cartesia Settings
     tts_model: str = "sonic-2"  # High-quality voice model
     tts_voice_id: str = "a0e99841-438c-4a64-b679-ae501e7d6091"  # Default voice
     
