@@ -104,7 +104,17 @@ class VoiceAgent:
         """
         base_instructions = """You are a helpful voice assistant with knowledge about specific articles.
         You can discuss the content of these articles, answer questions about them, and provide
-        insights based on the information you have. Be conversational, friendly, and informative."""
+        insights based on the information you have. 
+        
+        Key capabilities:
+        - Answer questions about articles in my knowledge base
+        - Search for specific topics across all articles
+        - Get detailed information about specific subjects
+        - List all articles currently available
+        - IMPORTANT: Process new articles that users provide! If a user gives you a URL or asks you to analyze an article, use the add_article function to process it.
+        
+        Be conversational, friendly, and informative. When users mention URLs or ask you to analyze articles, 
+        proactively offer to process them for them."""
         
         # Add knowledge context
         context = self.knowledge_base.get_conversation_context()
@@ -175,7 +185,41 @@ class VoiceAgent:
             
             return "Articles in my knowledge base:\n" + "\n".join(articles)
         
-        return [search_knowledge, get_detailed_info, list_articles]
+        # Tool to process new articles during conversation
+        @function_tool
+        async def add_article(
+            context: RunContext,
+            url: str,
+        ):
+            """Process a new article URL and add it to the knowledge base.
+            
+            Args:
+                url: The URL of the article to process and analyze
+            """
+            logger.info(f"Processing new article from URL: {url}")
+            
+            try:
+                # Extract the article
+                article = self.article_extractor.extract_from_url(url)
+                
+                if not article:
+                    return f"Sorry, I couldn't extract content from that URL: {url}. Please check if the URL is accessible and contains readable text."
+                
+                # Process it into the knowledge base
+                self.knowledge_base.add_articles([article])
+                
+                title = article.get('title', 'Untitled')
+                word_count = article.get('word_count', 0)
+                
+                logger.info(f"Successfully added article: {title} ({word_count} words)")
+                
+                return f"Great! I've successfully processed and added the article '{title}' ({word_count} words) to my knowledge base. You can now ask me questions about it!"
+                
+            except Exception as e:
+                logger.error(f"Error processing article from {url}: {e}")
+                return f"I encountered an error while processing that article: {str(e)}. Please try a different URL or check if the article is publicly accessible."
+        
+        return [search_knowledge, get_detailed_info, list_articles, add_article]
 
 
 # Global voice agent instance
@@ -294,10 +338,15 @@ def get_article_urls_from_env() -> List[str]:
         logger.info(f"Using {len(urls)} article URLs from ARTICLE_URLS environment variable")
         return urls
     
-    # Fallback to example URLs for development
+    # Fallback URLs - replace with your articles
     example_urls = [
+        # Replace these with your actual article URLs:
         "https://github.blog/2019-03-29-leader-spotlight-erin-spiceland/",
-        "https://docs.livekit.io/agents/"
+        "https://docs.livekit.io/agents/",
+        # Add your articles here:
+        # "https://your-website.com/important-article",
+        # "https://medium.com/@you/your-post",
+        # "https://blog.yourcompany.com/product-update"
     ]
     logger.info(f"Using {len(example_urls)} example article URLs (set ARTICLE_URLS env var for custom URLs)")
     return example_urls
