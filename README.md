@@ -249,6 +249,66 @@ response = requests.post(
 
 See the [Integration Guide](docs/integration-guide.md) for complete examples with web apps, mobile apps, chatbots, and more!
 
+## Railway Deployment 🚀
+
+Your voice agent is configured for easy deployment to Railway:
+
+### Quick Deploy to Railway
+
+1. **Connect Repository**: Connect your GitHub repo to Railway
+2. **Set Environment Variables** in Railway dashboard:
+   ```bash
+   LIVEKIT_URL=wss://your-instance.livekit.cloud
+   LIVEKIT_API_KEY=your-livekit-api-key
+   LIVEKIT_API_SECRET=your-livekit-api-secret
+   OPENAI_API_KEY=your-openai-api-key
+   DEEPGRAM_API_KEY=your-deepgram-api-key
+   CARTESIA_API_KEY=your-cartesia-api-key
+   
+   # Optional: Article URLs to process automatically
+   ARTICLE_URLS=https://example.com/article1,https://example.com/article2
+   ```
+
+3. **Deploy**: Railway will automatically build and deploy using:
+   - `railway.toml` for configuration
+   - `Dockerfile` for containerization
+   - Production start command: `python -m src.agent start`
+
+### Railway Configuration
+
+The included `railway.toml` configures:
+- **Build**: Docker-based build using your Dockerfile
+- **Resources**: 512MB RAM, 0.5 CPU cores (adjustable)
+- **Start Command**: `python -m src.agent start` (production mode)
+- **Restart Policy**: Automatic restart on failure (up to 3 retries)
+
+### Environment Variables
+
+Your agent supports these environment variables:
+
+| Variable | Required | Description | Example |
+|----------|----------|-------------|---------|
+| `LIVEKIT_URL` | ✅ | LiveKit server URL | `wss://instance.livekit.cloud` |
+| `LIVEKIT_API_KEY` | ✅ | LiveKit API key | `your-api-key` |
+| `LIVEKIT_API_SECRET` | ✅ | LiveKit API secret | `your-api-secret` |
+| `OPENAI_API_KEY` | ✅ | OpenAI API key | `sk-...` |
+| `DEEPGRAM_API_KEY` | ✅ | Deepgram API key | `your-deepgram-key` |
+| `CARTESIA_API_KEY` | ✅ | Cartesia API key | `your-cartesia-key` |
+| `ARTICLE_URLS` | ⭕ | Comma-separated article URLs | `url1,url2,url3` |
+| `LLM_MODEL` | ⭕ | OpenAI model | `gpt-4o-mini` |
+| `STT_MODEL` | ⭕ | Deepgram model | `nova-3` |
+| `TTS_MODEL` | ⭕ | Cartesia model | `sonic-2` |
+| `LOG_LEVEL` | ⭕ | Logging level | `INFO` |
+
+### Deployment Commands
+
+The agent supports these modes:
+- **Production**: `python -m src.agent start` (used by Railway)
+- **Development**: `python -m src.agent dev` (local with hot reload)
+- **Console**: `python -m src.agent console` (local terminal mode)
+
+For detailed deployment instructions, see [DEPLOYMENT.md](DEPLOYMENT.md).
+
 ## Development 🛠️
 
 ### Running Tests

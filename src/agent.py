@@ -278,15 +278,42 @@ def initialize_agent(
     )
 
 
-def run_agent(article_urls: List[str], config: Optional[Config] = None):
+def get_article_urls_from_env() -> List[str]:
     """
-    Run the voice agent with the provided article URLs.
+    Get article URLs from environment variables.
     
-    This is the main entry point for running the agent.
+    This checks for ARTICLE_URLS environment variable and falls back to examples.
+    
+    Returns:
+        List of article URLs to process
+    """
+    # Check environment variable first
+    env_urls = os.getenv("ARTICLE_URLS", "")
+    if env_urls:
+        urls = [url.strip() for url in env_urls.split(",") if url.strip()]
+        logger.info(f"Using {len(urls)} article URLs from ARTICLE_URLS environment variable")
+        return urls
+    
+    # Fallback to example URLs for development
+    example_urls = [
+        "https://github.blog/2019-03-29-leader-spotlight-erin-spiceland/",
+        "https://docs.livekit.io/agents/"
+    ]
+    logger.info(f"Using {len(example_urls)} example article URLs (set ARTICLE_URLS env var for custom URLs)")
+    return example_urls
+
+
+def create_worker_options(config: Optional[Config] = None) -> WorkerOptions:
+    """
+    Create WorkerOptions for the LiveKit CLI.
+    
+    This is the main function that sets up the agent for production deployment.
     
     Args:
-        article_urls: List of article URLs to process
         config: Optional configuration (uses defaults if not provided)
+        
+    Returns:
+        WorkerOptions instance for the LiveKit CLI
     """
     # Set up logging
     logging.basicConfig(
@@ -294,21 +321,30 @@ def run_agent(article_urls: List[str], config: Optional[Config] = None):
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
     )
     
-    logger.info("Starting voice agent...")
+    logger.info("Initializing voice agent for LiveKit CLI...")
     
-    # Initialize and run
+    # Get article URLs from environment or fallback to examples
+    article_urls = get_article_urls_from_env()
+    
+    # Initialize agent with articles
     worker_options = initialize_agent(article_urls, config)
-    cli.run_app(worker_options)
-
-
-# Example usage
-if __name__ == "__main__":
-    # Example article URLs for testing
-    # Note: These should be replaced with actual article URLs when running
-    example_urls = [
-        "https://github.blog/2019-03-29-leader-spotlight-erin-spiceland/",
-        "https://docs.livekit.io/agents/"
-    ]
+    logger.info("Voice agent initialized and ready for LiveKit CLI")
     
-    # Run the agent
-    run_agent(example_urls)
+    return worker_options
+
+
+# Main entry point for LiveKit CLI
+if __name__ == "__main__":
+    # Load configuration from environment
+    try:
+        config = Config.from_env()
+        config.validate()
+    except ValueError as e:
+        logger.error(f"Configuration error: {e}")
+        logger.info("Please set the required environment variables (see .env.example)")
+        exit(1)
+    
+    # Create worker options and run with LiveKit CLI
+    # This supports all CLI commands: start, dev, console, etc.
+    worker_options = create_worker_options(config)
+    cli.run_app(worker_options)

@@ -9,9 +9,9 @@ builder = "DOCKERFILE"
 dockerfilePath = "Dockerfile"
 
 [deploy]
-# Start command for the voice agent
-# This runs the agent module with article URLs from environment
-startCommand = "python -m src.agent"
+# Start command for the voice agent in production mode
+# The 'start' argument tells LiveKit Agents to run in production mode
+startCommand = "python -m src.agent start"
 
 # Health check endpoint (optional)
 # Since this is a voice agent, it might not have an HTTP endpoint

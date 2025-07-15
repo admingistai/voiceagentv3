@@ -46,7 +46,7 @@ USER agent
 # but this is here for potential future use
 EXPOSE 8080
 
-# Set the entrypoint to run the agent
-# This uses Python's -m flag to run the module
-# The actual command will be provided by Railway or docker-compose
-CMD ["python", "-m", "src.agent"]
+# Set the entrypoint to run the agent in production mode
+# The 'start' argument runs LiveKit Agents in production mode
+# Railway can override this command if needed via railway.toml
+CMD ["python", "-m", "src.agent", "start"]
